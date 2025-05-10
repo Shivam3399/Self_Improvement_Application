@@ -24,11 +24,6 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
       document.documentElement.style.color = "#0a0a0a"
     }
 
-    // Re-enable transitions after the initial render
-    setTimeout(() => {
-      document.documentElement.classList.add("transitions-enabled")
-    }, 300)
-
     setMounted(true)
   }, [])
 
@@ -57,7 +52,6 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 
     return () => {
       observer.disconnect()
-      document.documentElement.classList.remove("transitions-enabled")
     }
   }, [mounted])
 

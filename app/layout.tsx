@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from "@/contexts/auth-context"
 import Script from "next/script"
-import { EnsureTheme } from "@/components/ensure-theme"
 
 // Optimize font loading
 const inter = Inter({
@@ -33,68 +32,46 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className="no-flash">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Enhanced flash prevention script - runs as early as possible */}
         <Script id="prevent-flash" strategy="beforeInteractive">
           {`
-    (function() {
-      try {
-        // Get stored theme or use system preference with a more reliable fallback
-        const storedTheme = localStorage.getItem('theme');
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
-        // Determine if dark mode should be active
-        const isDark = 
-          storedTheme === 'dark' || 
-          (storedTheme !== 'light' && systemPrefersDark);
-        
-        // Apply theme IMMEDIATELY before any rendering
-        if (isDark) {
-          document.documentElement.classList.add('dark');
-          document.documentElement.style.colorScheme = 'dark';
-          document.documentElement.style.backgroundColor = '#030303';
-        } else {
-          document.documentElement.classList.remove('dark');
-          document.documentElement.style.colorScheme = 'light';
-          document.documentElement.style.backgroundColor = '#ffffff';
-        }
-        
-        // Create a style element to ensure consistent background during transitions
-        const style = document.createElement('style');
-        style.innerHTML = \`
-          html, body, #__next, main, div {
-            transition: background-color 0s !important;
-            background-color: \${isDark ? '#030303' : '#ffffff'} !important;
-          }
-          
-          @media (prefers-color-scheme: dark) {
-            :root:not(.light) {
-              color-scheme: dark;
-              background-color: #030303 !important;
-            }
-          }
-          
-          @media (prefers-color-scheme: light) {
-            :root:not(.dark) {
-              color-scheme: light;
-              background-color: #ffffff !important;
-            }
-          }
-        \`;
-        document.head.appendChild(style);
-        
-        // Remove the style tag after the page has fully loaded
-        window.addEventListener('load', function() {
-          setTimeout(function() {
-            document.head.removeChild(style);
-          }, 300);
-        });
-      } catch (e) {
-        console.error('Theme initialization error:', e);
-      }
-    })();
-  `}
+            (function() {
+              // Apply a base background color immediately to prevent white flash
+              document.documentElement.style.backgroundColor = '#030303';
+              
+              // Check if dark mode is preferred
+              const isDarkMode = localStorage.getItem('theme') === 'dark' || 
+                (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+              
+              // Apply dark class immediately to prevent flash
+              if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+                document.documentElement.style.backgroundColor = '#030303';
+                document.documentElement.style.color = '#fafafa';
+              } else {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.style.backgroundColor = '#ffffff';
+                document.documentElement.style.color = '#0a0a0a';
+              }
+              
+              // Listen for theme changes and apply them immediately
+              window.addEventListener('storage', function(e) {
+                if (e.key === 'theme') {
+                  if (e.newValue === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.style.backgroundColor = '#030303';
+                    document.documentElement.style.color = '#fafafa';
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.style.backgroundColor = '#ffffff';
+                    document.documentElement.style.color = '#0a0a0a';
+                  }
+                }
+              });
+            })();
+          `}
         </Script>
 
         {/* Preload critical resources */}
@@ -103,7 +80,6 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <EnsureTheme />
           <AuthProvider>{children}</AuthProvider>
           <Toaster />
         </ThemeProvider>
