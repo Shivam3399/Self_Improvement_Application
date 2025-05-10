@@ -41,7 +41,10 @@ export default function CheckInModal({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className={cn(
+        "fixed inset-0 z-50 flex items-center justify-center p-4",
+        isDark ? "bg-background/80" : "bg-background/80",
+      )}
       onClick={onClose}
     >
       <motion.div
@@ -49,8 +52,8 @@ export default function CheckInModal({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         className={cn(
-          "w-full max-w-md rounded-xl shadow-2xl",
-          isDark ? "bg-gray-900 border border-gray-800" : "bg-white border border-gray-200",
+          "w-full max-w-md rounded-lg border shadow-lg",
+          isDark ? "bg-card border-border" : "bg-card border-border",
         )}
         onClick={(e) => e.stopPropagation()}
       >
@@ -157,17 +160,17 @@ export default function CheckInModal({
               Notes (optional)
             </label>
             <textarea
-              id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Add any notes about today's check-in..."
+              placeholder="Add any notes about today's progress..."
+              rows={3}
               className={cn(
-                "w-full h-24 px-3 py-2 rounded-lg border focus:ring-2 outline-none transition-colors",
+                "w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-2 transition-colors",
                 isDark
-                  ? "bg-gray-800 border-gray-700 focus:ring-indigo-500/50 text-white"
-                  : "bg-white border-gray-300 focus:ring-indigo-500/30 text-gray-900",
+                  ? "bg-background border-input text-foreground focus:ring-primary/50"
+                  : "bg-background border-input text-foreground focus:ring-primary/30",
               )}
-            ></textarea>
+            />
           </div>
 
           <div className="flex justify-end gap-3">
@@ -181,21 +184,29 @@ export default function CheckInModal({
               Cancel
             </button>
             <button
-              onClick={handleSubmit}
-              disabled={!selected}
+              onClick={() => onSubmit(true, notes)}
               className={cn(
-                "px-4 py-2 rounded-lg text-sm font-medium",
-                selected === "completed"
-                  ? "bg-green-500 text-white hover:bg-green-600"
-                  : selected === "missed"
-                    ? "bg-red-500 text-white hover:bg-red-600"
-                    : isDark
-                      ? "bg-gray-700 text-gray-400"
-                      : "bg-gray-200 text-gray-500",
-                !selected && "cursor-not-allowed",
+                "px-4 py-2 rounded-md flex-1 flex items-center justify-center gap-1 transition-colors",
+                isDark
+                  ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+                  : "bg-primary hover:bg-primary/90 text-primary-foreground",
               )}
             >
-              Submit Check-in
+              <Check size={16} />
+              <span>Completed</span>
+            </button>
+
+            <button
+              onClick={() => onSubmit(false, notes)}
+              className={cn(
+                "px-4 py-2 rounded-md flex-1 flex items-center justify-center gap-1 transition-colors",
+                isDark
+                  ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                  : "bg-destructive hover:bg-destructive/90 text-destructive-foreground",
+              )}
+            >
+              <X size={16} />
+              <span>Missed</span>
             </button>
           </div>
         </div>

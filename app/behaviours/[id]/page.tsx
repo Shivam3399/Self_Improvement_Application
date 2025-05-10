@@ -336,332 +336,320 @@ export default function BehaviourDetailsPage() {
     <div
       className={cn(
         "min-h-screen w-full p-4 md:p-8 transition-colors duration-500",
-        isDark ? "bg-[#030303] text-white" : "bg-gray-50 text-gray-900",
+        isDark ? "bg-background text-foreground" : "bg-background text-foreground",
       )}
     >
-      <div
-        className={cn(
-          "absolute inset-0 -z-10 transition-colors duration-500",
-          isDark
-            ? "bg-gradient-to-br from-indigo-500/[0.03] via-transparent to-rose-500/[0.03]"
-            : "bg-gradient-to-br from-indigo-500/[0.02] via-transparent to-rose-500/[0.02]",
-        )}
-      />
-
-      <div className="max-w-3xl mx-auto">
-        <div
-          className={cn(
-            "absolute inset-0 -z-10 transition-colors duration-500",
-            isDark
-              ? "bg-gradient-to-br from-indigo-500/[0.03] via-transparent to-rose-500/[0.03]"
-              : "bg-gradient-to-br from-indigo-500/[0.02] via-transparent to-rose-500/[0.02]",
-          )}
-        />
-        <div className="flex items-center mb-6">
-          <Link
-            href="/behaviours"
-            className={cn(
-              "mr-4 p-2 rounded-full transition-colors",
-              isDark
-                ? "hover:bg-gray-800 text-gray-400 hover:text-white"
-                : "hover:bg-gray-100 text-gray-500 hover:text-gray-700",
-            )}
-          >
-            <ArrowLeft size={20} />
-          </Link>
-          <h1 className={cn("text-2xl font-bold", isDark ? "text-white" : "text-gray-900")}>{behaviour.name}</h1>
-        </div>
-
-        {checkInStatus && (
-          <div
-            className={cn(
-              "mb-4 p-3 rounded-lg flex items-center",
-              checkInStatus.status === "success"
-                ? isDark
-                  ? "bg-green-900/20 border border-green-800/30 text-green-400"
-                  : "bg-green-100 border border-green-200 text-green-800"
-                : isDark
-                  ? "bg-red-900/20 border border-red-800/30 text-red-400"
-                  : "bg-red-100 border border-red-200 text-red-800",
-            )}
-          >
-            {checkInStatus.status === "success" ? (
-              <Check className="w-5 h-5 mr-2 flex-shrink-0" />
-            ) : (
-              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
-            )}
-            <span>{checkInStatus.message}</span>
-          </div>
-        )}
-
-        <div
-          className={cn(
-            "rounded-lg p-6 shadow-sm mb-8 border",
-            isDark ? "bg-gray-800/70 border-gray-700/70" : "bg-white border-gray-200",
-          )}
-        >
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-            <div>
-              <p className={cn("mb-2", isDark ? "text-gray-300" : "text-gray-700")}>{behaviour.description}</p>
-              <div className="flex flex-wrap gap-3">
-                <div
-                  className={cn(
-                    "flex items-center gap-1 text-sm font-medium px-3 py-1.5 rounded-full",
-                    isDark ? "bg-indigo-500/20 text-indigo-300" : "bg-indigo-100 text-indigo-600",
-                  )}
-                >
-                  <Flame size={16} />
-                  <span>Streak: {behaviour.streak} days</span>
-                </div>
-
-                <div
-                  className={cn(
-                    "flex items-center gap-1 text-sm font-medium px-3 py-1.5 rounded-full",
-                    isDark ? "bg-green-500/20 text-green-300" : "bg-green-100 text-green-600",
-                  )}
-                >
-                  <Percent size={16} />
-                  <span>Success rate: {calculateSuccessRate()}%</span>
-                </div>
-
-                <div
-                  className={cn(
-                    "flex items-center gap-1 text-sm font-medium px-3 py-1.5 rounded-full",
-                    isDark ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-600",
-                  )}
-                >
-                  <Calendar size={16} />
-                  <span>Days tracked: {behaviour.history?.length || 0}</span>
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setIsCheckInModalOpen(true)}
-              disabled={checkedInToday}
+      <div className="max-w-4xl mx-auto bg-card rounded-xl shadow-sm border border-border p-6 md:p-8">
+        <div className="grid gap-8">
+          {/* Header section with back button and title */}
+          <header className="flex items-center">
+            <Link
+              href="/behaviours"
               className={cn(
-                "px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2",
-                checkedInToday
-                  ? isDark
-                    ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                    : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                  : isDark
-                    ? "bg-indigo-600 text-white hover:bg-indigo-700"
-                    : "bg-indigo-500 text-white hover:bg-indigo-600",
+                "mr-4 p-2 rounded-full transition-colors",
+                isDark
+                  ? "hover:bg-gray-800 text-gray-400 hover:text-white"
+                  : "hover:bg-gray-100 text-gray-500 hover:text-gray-700",
               )}
+              aria-label="Back to behaviors"
             >
-              {checkedInToday ? (
-                <>
-                  <Check size={16} />
-                  <span>Checked in today</span>
-                </>
-              ) : (
-                <>
-                  <Plus size={16} />
-                  <span>Check-in today</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
+              <ArrowLeft size={20} />
+            </Link>
+            <h1 className={cn("text-2xl md:text-3xl font-bold", isDark ? "text-white" : "text-gray-900")}>
+              {behaviour.name}
+            </h1>
+          </header>
 
-        {/* Tabs for Improvements and History */}
-        <div className="mb-6">
-          <div className="flex border-b">
-            <button
-              onClick={() => setActiveTab("improvements")}
-              className={cn(
-                "px-4 py-2 font-medium text-sm transition-colors relative",
-                activeTab === "improvements"
-                  ? isDark
-                    ? "text-indigo-400 border-b-2 border-indigo-500"
-                    : "text-indigo-600 border-b-2 border-indigo-500"
-                  : isDark
-                    ? "text-gray-400 hover:text-gray-300"
-                    : "text-gray-500 hover:text-gray-700",
-              )}
-            >
-              Improvement Items
-            </button>
-
-            <button
-              onClick={() => setActiveTab("history")}
-              className={cn(
-                "px-4 py-2 font-medium text-sm transition-colors relative",
-                activeTab === "history"
-                  ? isDark
-                    ? "text-indigo-400 border-b-2 border-indigo-500"
-                    : "text-indigo-600 border-b-2 border-indigo-500"
-                  : isDark
-                    ? "text-gray-400 hover:text-gray-300"
-                    : "text-gray-500 hover:text-gray-700",
-              )}
-            >
-              Check-in History
-            </button>
-          </div>
-        </div>
-
-        {activeTab === "improvements" ? (
-          <div className="mb-8">
-            {/* Add new item form */}
+          {/* Status message */}
+          {checkInStatus && (
             <div
               className={cn(
-                "mb-6 p-4 rounded-lg border",
-                isDark ? "bg-gray-800/70 border-gray-700/70" : "bg-white border-gray-200",
+                "p-4 rounded-lg flex items-center",
+                checkInStatus.status === "success"
+                  ? isDark
+                    ? "bg-green-900/20 border border-green-800/30 text-green-400"
+                    : "bg-green-100 border border-green-200 text-green-800"
+                  : isDark
+                    ? "bg-red-900/20 border border-red-800/30 text-red-400"
+                    : "bg-red-100 border border-red-200 text-red-800",
               )}
             >
-              <h3 className={cn("text-sm font-medium mb-2", isDark ? "text-gray-300" : "text-gray-700")}>
-                Add New Improvement Item
-              </h3>
-
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newItem}
-                  onChange={(e) => setNewItem(e.target.value)}
-                  placeholder="Enter a way to improve this behaviour..."
-                  className={cn(
-                    "flex-1 px-3 py-2 rounded-md border focus:outline-none focus:ring-2 transition-colors",
-                    isDark
-                      ? "bg-gray-700 border-gray-600 text-white focus:ring-indigo-500/50"
-                      : "bg-white border-gray-300 text-gray-900 focus:ring-indigo-500/30",
-                  )}
-                />
-                <button
-                  onClick={handleAddItem}
-                  className={cn(
-                    "px-4 py-2 rounded-md flex items-center gap-1 transition-colors",
-                    isDark
-                      ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-                      : "bg-indigo-500 hover:bg-indigo-600 text-white",
-                  )}
-                >
-                  <Plus size={16} />
-                  <span>Add</span>
-                </button>
-              </div>
-
-              {error && (
-                <div className="mt-2 text-red-500 text-sm flex items-center gap-1">
-                  <AlertCircle size={14} />
-                  <span>{error}</span>
-                </div>
+              {checkInStatus.status === "success" ? (
+                <Check className="w-5 h-5 mr-3 flex-shrink-0" />
+              ) : (
+                <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0" />
               )}
+              <span className="font-medium">{checkInStatus.message}</span>
             </div>
+          )}
 
-            {/* Improvement items list */}
-            {behaviour.improvementItems && behaviour.improvementItems.length > 0 ? (
-              <ul className="space-y-3">
-                {behaviour.improvementItems.map((item) => (
-                  <li
-                    key={item.id}
+          {/* Behavior summary card */}
+          <section
+            className={cn(
+              "rounded-xl p-6 shadow-sm border",
+              isDark ? "bg-card/50 border-border" : "bg-card border-border",
+            )}
+          >
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="space-y-4">
+                <p className={cn("text-lg", isDark ? "text-gray-200" : "text-gray-700")}>{behaviour.description}</p>
+                <div className="flex flex-wrap gap-3">
+                  <div
                     className={cn(
-                      "p-4 rounded-lg border",
-                      isDark ? "bg-gray-800/70 border-gray-700/70" : "bg-white border-gray-200",
+                      "flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full",
+                      isDark ? "bg-primary/20 text-primary" : "bg-primary/20 text-primary",
                     )}
                   >
-                    {item.isEditing ? (
-                      <div className="flex flex-col gap-2">
-                        <input
-                          type="text"
-                          defaultValue={item.text}
-                          id={`edit-item-${item.id}`}
-                          className={cn(
-                            "w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-2 transition-colors",
-                            isDark
-                              ? "bg-gray-700 border-gray-600 text-white focus:ring-indigo-500/50"
-                              : "bg-white border-gray-300 text-gray-900 focus:ring-indigo-500/30",
-                          )}
-                        />
-                        <div className="flex justify-end gap-2">
-                          <button
-                            onClick={() => handleCancelEdit(item.id)}
-                            className={cn(
-                              "px-3 py-1.5 rounded-md flex items-center gap-1 text-sm transition-colors",
-                              isDark
-                                ? "bg-gray-700 hover:bg-gray-600 text-gray-300"
-                                : "bg-gray-100 hover:bg-gray-200 text-gray-700",
-                            )}
-                          >
-                            <X size={14} />
-                            <span>Cancel</span>
-                          </button>
-                          <button
-                            onClick={() => {
-                              const input = document.getElementById(`edit-item-${item.id}`) as HTMLInputElement
-                              handleSaveEdit(item.id, input.value)
-                            }}
-                            className={cn(
-                              "px-3 py-1.5 rounded-md flex items-center gap-1 text-sm transition-colors",
-                              isDark
-                                ? "bg-green-600 hover:bg-green-700 text-white"
-                                : "bg-green-500 hover:bg-green-600 text-white",
-                            )}
-                          >
-                            <Check size={14} />
-                            <span>Save</span>
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex justify-between items-center">
-                        <p className={isDark ? "text-gray-300" : "text-gray-700"}>{item.text}</p>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleStartEdit(item.id)}
-                            className={cn(
-                              "p-1.5 rounded-md transition-colors",
-                              isDark
-                                ? "text-gray-400 hover:bg-gray-700 hover:text-white"
-                                : "text-gray-500 hover:bg-gray-100 hover:text-gray-700",
-                            )}
-                            aria-label="Edit item"
-                          >
-                            <Edit2 size={16} />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteItem(item.id)}
-                            className={cn(
-                              "p-1.5 rounded-md transition-colors",
-                              isDark
-                                ? "text-gray-400 hover:bg-red-900/50 hover:text-red-300"
-                                : "text-gray-500 hover:bg-red-100 hover:text-red-600",
-                            )}
-                            aria-label="Delete item"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </div>
+                    <Flame size={18} />
+                    <span>Streak: {behaviour.streak} days</span>
+                  </div>
+
+                  <div
+                    className={cn(
+                      "flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full",
+                      isDark ? "bg-green-500/20 text-green-400" : "bg-green-100 text-green-600",
                     )}
-                  </li>
-                ))}
-              </ul>
+                  >
+                    <Percent size={18} />
+                    <span>Success rate: {calculateSuccessRate()}%</span>
+                  </div>
+
+                  <div
+                    className={cn(
+                      "flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-full",
+                      isDark ? "bg-blue-500/20 text-blue-400" : "bg-blue-100 text-blue-600",
+                    )}
+                  >
+                    <Calendar size={18} />
+                    <span>Days tracked: {behaviour.history?.length || 0}</span>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsCheckInModalOpen(true)}
+                disabled={checkedInToday}
+                className={cn(
+                  "px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition-all",
+                  checkedInToday
+                    ? isDark
+                      ? "bg-muted text-muted-foreground cursor-not-allowed"
+                      : "bg-muted text-muted-foreground cursor-not-allowed"
+                    : isDark
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                      : "bg-primary text-primary-foreground hover:bg-primary/90",
+                )}
+              >
+                {checkedInToday ? (
+                  <>
+                    <Check size={18} />
+                    <span>Checked in today</span>
+                  </>
+                ) : (
+                  <>
+                    <Plus size={18} />
+                    <span>Check-in today</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </section>
+
+          {/* Tabs navigation */}
+          <nav className="border-b">
+            <div className="flex">
+              <button
+                onClick={() => setActiveTab("improvements")}
+                className={cn(
+                  "px-5 py-3 font-medium text-sm transition-colors relative",
+                  activeTab === "improvements"
+                    ? isDark
+                      ? "text-primary border-b-2 border-primary"
+                      : "text-primary border-b-2 border-primary"
+                    : isDark
+                      ? "text-muted-foreground hover:text-foreground"
+                      : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                Improvement Items
+              </button>
+
+              <button
+                onClick={() => setActiveTab("history")}
+                className={cn(
+                  "px-5 py-3 font-medium text-sm transition-colors relative",
+                  activeTab === "history"
+                    ? isDark
+                      ? "text-primary border-b-2 border-primary"
+                      : "text-primary border-b-2 border-primary"
+                    : isDark
+                      ? "text-muted-foreground hover:text-foreground"
+                      : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                Check-in History
+              </button>
+            </div>
+          </nav>
+
+          {/* Tab content */}
+          <div className="pt-2">
+            {activeTab === "improvements" ? (
+              <div className="space-y-6">
+                {/* Add new item form */}
+                <section
+                  className={cn("p-5 rounded-xl border", isDark ? "bg-card/50 border-border" : "bg-card border-border")}
+                >
+                  <h3 className={cn("text-base font-medium mb-4", isDark ? "text-foreground" : "text-foreground")}>
+                    Add New Improvement Item
+                  </h3>
+
+                  <div className="flex gap-3">
+                    <input
+                      type="text"
+                      value={newItem}
+                      onChange={(e) => setNewItem(e.target.value)}
+                      placeholder="Enter a way to improve this behaviour..."
+                      className={cn(
+                        "flex-1 px-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors",
+                        isDark
+                          ? "bg-background border-input text-foreground focus:ring-primary/50"
+                          : "bg-background border-input text-foreground focus:ring-primary/30",
+                      )}
+                    />
+                    <button
+                      onClick={handleAddItem}
+                      className={cn(
+                        "px-5 py-2.5 rounded-lg flex items-center gap-2 transition-colors whitespace-nowrap",
+                        isDark
+                          ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+                          : "bg-primary hover:bg-primary/90 text-primary-foreground",
+                      )}
+                    >
+                      <Plus size={18} />
+                      <span>Add</span>
+                    </button>
+                  </div>
+
+                  {error && (
+                    <div className="mt-3 text-destructive text-sm flex items-center gap-2">
+                      <AlertCircle size={16} />
+                      <span>{error}</span>
+                    </div>
+                  )}
+                </section>
+
+                {/* Improvement items list */}
+                {behaviour.improvementItems && behaviour.improvementItems.length > 0 ? (
+                  <ul className="space-y-4">
+                    {behaviour.improvementItems.map((item) => (
+                      <li
+                        key={item.id}
+                        className={cn(
+                          "p-5 rounded-xl border",
+                          isDark ? "bg-card/50 border-border" : "bg-card border-border",
+                        )}
+                      >
+                        {item.isEditing ? (
+                          <div className="flex flex-col gap-3">
+                            <input
+                              type="text"
+                              defaultValue={item.text}
+                              id={`edit-item-${item.id}`}
+                              className={cn(
+                                "w-full px-4 py-2.5 rounded-lg border focus:outline-none focus:ring-2 transition-colors",
+                                isDark
+                                  ? "bg-background border-input text-foreground focus:ring-primary/50"
+                                  : "bg-background border-input text-foreground focus:ring-primary/30",
+                              )}
+                            />
+                            <div className="flex justify-end gap-3">
+                              <button
+                                onClick={() => handleCancelEdit(item.id)}
+                                className={cn(
+                                  "px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-colors",
+                                  isDark
+                                    ? "bg-secondary hover:bg-secondary/80 text-secondary-foreground"
+                                    : "bg-secondary hover:bg-secondary/80 text-secondary-foreground",
+                                )}
+                              >
+                                <X size={16} />
+                                <span>Cancel</span>
+                              </button>
+                              <button
+                                onClick={() => {
+                                  const input = document.getElementById(`edit-item-${item.id}`) as HTMLInputElement
+                                  handleSaveEdit(item.id, input.value)
+                                }}
+                                className={cn(
+                                  "px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-colors",
+                                  isDark
+                                    ? "bg-green-600 hover:bg-green-700 text-white"
+                                    : "bg-green-500 hover:bg-green-600 text-white",
+                                )}
+                              >
+                                <Check size={16} />
+                                <span>Save</span>
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex justify-between items-center">
+                            <p className={cn("text-base", isDark ? "text-gray-200" : "text-gray-700")}>{item.text}</p>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleStartEdit(item.id)}
+                                className={cn(
+                                  "p-2 rounded-lg transition-colors",
+                                  isDark
+                                    ? "text-gray-400 hover:bg-gray-700 hover:text-white"
+                                    : "text-gray-500 hover:bg-gray-100 hover:text-gray-700",
+                                )}
+                                aria-label="Edit item"
+                              >
+                                <Edit2 size={18} />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteItem(item.id)}
+                                className={cn(
+                                  "p-2 rounded-lg transition-colors",
+                                  isDark
+                                    ? "text-gray-400 hover:bg-red-900/50 hover:text-red-300"
+                                    : "text-gray-500 hover:bg-red-100 hover:text-red-600",
+                                )}
+                                aria-label="Delete item"
+                              >
+                                <Trash2 size={18} />
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className={cn("text-center py-12 rounded-xl", isDark ? "bg-muted/50" : "bg-muted/50")}>
+                    <p className={cn("text-lg", isDark ? "text-muted-foreground" : "text-muted-foreground")}>
+                      No improvement items yet. Add your first one above!
+                    </p>
+                  </div>
+                )}
+              </div>
             ) : (
-              <div className={cn("text-center py-8 rounded-lg", isDark ? "bg-gray-800/50" : "bg-gray-50")}>
-                <p className={isDark ? "text-gray-400" : "text-gray-500"}>
-                  No improvement items yet. Add your first one above!
-                </p>
+              <div>
+                <section
+                  className={cn("p-5 rounded-xl border", isDark ? "bg-card/50 border-border" : "bg-card border-border")}
+                >
+                  <h3 className={cn("text-base font-medium mb-5", isDark ? "text-gray-200" : "text-gray-700")}>
+                    Check-in History
+                  </h3>
+
+                  <StreakHistory history={behaviour.history || []} isDark={isDark} />
+                </section>
               </div>
             )}
           </div>
-        ) : (
-          <div className="mb-8">
-            <div
-              className={cn(
-                "p-4 rounded-lg border",
-                isDark ? "bg-gray-800/70 border-gray-700/70" : "bg-white border-gray-200",
-              )}
-            >
-              <h3 className={cn("text-sm font-medium mb-4", isDark ? "text-gray-300" : "text-gray-700")}>
-                Check-in History
-              </h3>
-
-              <StreakHistory history={behaviour.history || []} isDark={isDark} />
-            </div>
-          </div>
-        )}
+        </div>
       </div>
 
       <CheckInModal
