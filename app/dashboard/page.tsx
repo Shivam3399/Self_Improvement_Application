@@ -30,6 +30,7 @@ import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
 import ProtectedRoute from "@/components/protected-route"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { PageTransition } from "@/components/page-transition"
 
 // Dynamic import with loading fallback
 const TimeBasedSuggestions = dynamic(() => import("../../components/time-based-suggestions"), {
@@ -1305,302 +1306,306 @@ export default function DashboardPage() {
 
           {/* Dashboard content */}
           <main className="p-4 md:p-6">
-            <div className="container mx-auto p-4">
-              <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+            <PageTransition>
+              <div className="container mx-auto p-4 space-y-6">
+                <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
 
-              <Card className="mb-4">
-                <CardHeader>
-                  <CardTitle>Welcome, {user?.name || "User"}!</CardTitle>
-                  <CardDescription>This is your personal dashboard</CardDescription>
-                </CardHeader>
-                <CardContent></CardContent>
-              </Card>
+                <Card className="mb-4">
+                  <CardHeader>
+                    <CardTitle>Welcome, {user?.name || "User"}!</CardTitle>
+                    <CardDescription>This is your personal dashboard</CardDescription>
+                  </CardHeader>
+                  <CardContent></CardContent>
+                </Card>
 
-              {/* Stats overview */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-                <div
-                  className={cn(
-                    "rounded-lg p-4 shadow-sm transform transition-all duration-300 hover:scale-105",
-                    isDark ? "bg-gray-800/70 border border-gray-700/70" : "bg-white border border-gray-200",
-                  )}
-                >
-                  <div className="flex items-center">
-                    <div
-                      className={cn(
-                        "flex-shrink-0 rounded-md p-3",
-                        isDark ? "bg-indigo-500/20 text-indigo-300" : "bg-indigo-100 text-indigo-600",
-                      )}
-                    >
-                      <ListTodo size={24} />
-                    </div>
-                    <div className="ml-4">
-                      <p className={cn("text-sm font-medium", isDark ? "text-gray-400" : "text-gray-500")}>
-                        Total Behaviours
-                      </p>
-                      <p className={cn("text-2xl font-semibold", isDark ? "text-white" : "text-gray-900")}>
-                        {getTotalBehaviours}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className={cn(
-                    "rounded-lg p-4 shadow-sm transform transition-all duration-300 hover:scale-105",
-                    isDark ? "bg-gray-800/70 border border-gray-700/70" : "bg-white border border-gray-200",
-                  )}
-                >
-                  <div className="flex items-center">
-                    <div
-                      className={cn(
-                        "flex-shrink-0 rounded-md p-3",
-                        isDark ? "bg-rose-500/20 text-rose-300" : "bg-rose-100 text-rose-600",
-                      )}
-                    >
-                      <Check size={24} />
-                    </div>
-                    <div className="ml-4">
-                      <p className={cn("text-sm font-medium", isDark ? "text-gray-400" : "text-gray-500")}>
-                        Total Check-ins
-                      </p>
-                      <p className={cn("text-2xl font-semibold", isDark ? "text-white" : "text-gray-900")}>
-                        {getTotalCheckIns}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className={cn(
-                    "rounded-lg p-4 shadow-sm transform transition-all duration-300 hover:scale-105",
-                    isDark ? "bg-gray-800/70 border border-gray-700/70" : "bg-white border border-gray-200",
-                  )}
-                >
-                  <div className="flex items-center">
-                    <div
-                      className={cn(
-                        "flex-shrink-0 rounded-md p-3",
-                        isDark ? "bg-amber-500/20 text-amber-300" : "bg-amber-100 text-amber-600",
-                      )}
-                    >
-                      <Award size={24} />
-                    </div>
-                    <div className="ml-4">
-                      <p className={cn("text-sm font-medium", isDark ? "text-gray-400" : "text-gray-500")}>
-                        Longest Streak
-                      </p>
-                      <p className={cn("text-2xl font-semibold", isDark ? "text-white" : "text-gray-900")}>
-                        {getLongestStreak} days
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className={cn(
-                    "rounded-lg p-4 shadow-sm transform transition-all duration-300 hover:scale-105",
-                    isDark ? "bg-gray-800/70 border border-gray-700/70" : "bg-white border border-gray-200",
-                  )}
-                >
-                  <div className="flex items-center">
-                    <div
-                      className={cn(
-                        "flex-shrink-0 rounded-md p-3",
-                        isDark ? "bg-emerald-500/20 text-emerald-300" : "bg-emerald-100 text-emerald-600",
-                      )}
-                    >
-                      <BarChart2 size={24} />
-                    </div>
-                    <div className="ml-4">
-                      <p className={cn("text-sm font-medium", isDark ? "text-gray-400" : "text-gray-500")}>
-                        Completion Rate
-                      </p>
-                      <p className={cn("text-2xl font-semibold", isDark ? "text-white" : "text-gray-900")}>
-                        {getOverallCompletionRate}%
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Motivational quote */}
-              <div
-                className={cn(
-                  "mb-6 p-6 rounded-lg shadow-sm text-center transform transition-all duration-500 hover:shadow-lg will-change-transform",
-                  isDark
-                    ? "bg-gradient-to-r from-indigo-900/30 to-purple-900/30 border border-indigo-800/30"
-                    : "bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100",
-                )}
-              >
-                <p className={cn("text-lg italic", isDark ? "text-indigo-300" : "text-indigo-800")}>
-                  "{motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]}"
-                </p>
-              </div>
-
-              {/* Time-based suggestions */}
-              <div className="mb-6">
-                <Suspense
-                  fallback={
-                    <div className="p-8 border rounded-xl animate-pulse bg-gray-100 dark:bg-gray-800">
-                      <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-                      <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                      <div className="h-4 w-3/4 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                    </div>
-                  }
-                >
-                  <TimeBasedSuggestions isDark={isDark} onAddBehaviour={handleAddSuggestedBehaviour} />
-                </Suspense>
-              </div>
-
-              {/* Add behaviour button */}
-              <div className="flex justify-between items-center mb-8">
-                <h2 className={cn("text-xl font-semibold", isDark ? "text-white" : "text-gray-900")}>
-                  Your Behaviours
-                </h2>
-                <button
-                  onClick={() => setIsCreatingBehaviour(true)}
-                  className={cn(
-                    "flex items-center justify-center gap-3 px-5 py-2.5 rounded-lg transition-all duration-300",
-                    "bg-gradient-to-r from-indigo-500 to-rose-500 text-white",
-                    "hover:shadow-lg hover:opacity-90 focus:ring-2 focus:ring-offset-2",
-                    "focus:ring-indigo-500 focus:outline-none mt-2 transform hover:scale-105",
-                    isDark ? "focus:ring-offset-gray-900" : "focus:ring-offset-white",
-                  )}
-                >
-                  <PlusCircle size={18} className="flex-shrink-0" />
-                  <span className="font-medium">New Behaviour</span>
-                </button>
-              </div>
-
-              {/* Create behaviour form */}
-              {isCreatingBehaviour && (
-                <div
-                  className={cn(
-                    "mb-6 p-6 rounded-lg border shadow-sm transition-colors duration-500",
-                    isDark ? "bg-gray-800/50 border-gray-700" : "bg-indigo-50 border-indigo-100",
-                  )}
-                >
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className={cn("text-lg font-semibold", isDark ? "text-white" : "text-indigo-900")}>
-                      Create New Behaviour
-                    </h2>
-                    <button
-                      onClick={() => setIsCreatingBehaviour(false)}
-                      className={cn(
-                        "transition-colors duration-300 rounded-full p-1",
-                        isDark
-                          ? "text-gray-400 hover:text-gray-200 hover:bg-gray-700"
-                          : "text-gray-500 hover:text-gray-700 hover:bg-gray-100",
-                      )}
-                    >
-                      <X size={18} />
-                    </button>
-                  </div>
-                  <form onSubmit={handleCreateBehaviour}>
-                    <div className="grid gap-4 mb-4 md:grid-cols-2">
-                      <div>
-                        <label
-                          htmlFor="behaviourName"
-                          className={cn("block text-sm font-medium mb-1", isDark ? "text-gray-300" : "text-gray-700")}
-                        >
-                          Behaviour Name
-                        </label>
-                        <input
-                          type="text"
-                          id="behaviourName"
-                          value={newBehaviourName}
-                          onChange={(e) => setNewBehaviourName(e.target.value)}
-                          className={cn(
-                            "w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 transition-colors duration-300",
-                            isDark
-                              ? "bg-gray-800 border-gray-700 text-white border focus:ring-indigo-500/50"
-                              : "bg-white border border-gray-300 text-gray-900 focus:ring-indigo-500/30",
-                          )}
-                          placeholder="e.g., Daily Reading"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="behaviourDescription"
-                          className={cn("block text-sm font-medium mb-1", isDark ? "text-gray-300" : "text-gray-700")}
-                        >
-                          Description (Optional)
-                        </label>
-                        <input
-                          type="text"
-                          id="behaviourDescription"
-                          value={newBehaviourDescription}
-                          onChange={(e) => setNewBehaviourDescription(e.target.value)}
-                          className={cn(
-                            "w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 transition-colors duration-300",
-                            isDark
-                              ? "bg-gray-800 border-gray-700 text-white border focus:ring-indigo-500/50"
-                              : "bg-white border border-gray-300 text-gray-900 focus:ring-indigo-500/30",
-                          )}
-                          placeholder="e.g., Read for 20 minutes each day"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex justify-end">
-                      <button
-                        type="button"
-                        onClick={() => setIsCreatingBehaviour(false)}
+                {/* Stats overview */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+                  <div
+                    className={cn(
+                      "rounded-lg p-4 shadow-sm transform transition-all duration-300 hover:scale-105",
+                      isDark ? "bg-gray-800/70 border border-gray-700/70" : "bg-white border border-gray-200",
+                    )}
+                  >
+                    <div className="flex items-center">
+                      <div
                         className={cn(
-                          "px-4 py-2 rounded-md mr-2 transition-colors duration-300",
-                          isDark
-                            ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                            : "border border-gray-300 text-gray-700 hover:bg-gray-50",
+                          "flex-shrink-0 rounded-md p-3",
+                          isDark ? "bg-indigo-500/20 text-indigo-300" : "bg-indigo-100 text-indigo-600",
                         )}
                       >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-rose-500 text-white rounded-md hover:opacity-90 transition-opacity duration-300"
-                      >
-                        Create Behaviour
-                      </button>
+                        <ListTodo size={24} />
+                      </div>
+                      <div className="ml-4">
+                        <p className={cn("text-sm font-medium", isDark ? "text-gray-400" : "text-gray-500")}>
+                          Total Behaviours
+                        </p>
+                        <p className={cn("text-2xl font-semibold", isDark ? "text-white" : "text-gray-900")}>
+                          {getTotalBehaviours}
+                        </p>
+                      </div>
                     </div>
-                  </form>
+                  </div>
+                  <div
+                    className={cn(
+                      "rounded-lg p-4 shadow-sm transform transition-all duration-300 hover:scale-105",
+                      isDark ? "bg-gray-800/70 border border-gray-700/70" : "bg-white border border-gray-200",
+                    )}
+                  >
+                    <div className="flex items-center">
+                      <div
+                        className={cn(
+                          "flex-shrink-0 rounded-md p-3",
+                          isDark ? "bg-rose-500/20 text-rose-300" : "bg-rose-100 text-rose-600",
+                        )}
+                      >
+                        <Check size={24} />
+                      </div>
+                      <div className="ml-4">
+                        <p className={cn("text-sm font-medium", isDark ? "text-gray-400" : "text-gray-500")}>
+                          Total Check-ins
+                        </p>
+                        <p className={cn("text-2xl font-semibold", isDark ? "text-white" : "text-gray-900")}>
+                          {getTotalCheckIns}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={cn(
+                      "rounded-lg p-4 shadow-sm transform transition-all duration-300 hover:scale-105",
+                      isDark ? "bg-gray-800/70 border border-gray-700/70" : "bg-white border border-gray-200",
+                    )}
+                  >
+                    <div className="flex items-center">
+                      <div
+                        className={cn(
+                          "flex-shrink-0 rounded-md p-3",
+                          isDark ? "bg-amber-500/20 text-amber-300" : "bg-amber-100 text-amber-600",
+                        )}
+                      >
+                        <Award size={24} />
+                      </div>
+                      <div className="ml-4">
+                        <p className={cn("text-sm font-medium", isDark ? "text-gray-400" : "text-gray-500")}>
+                          Longest Streak
+                        </p>
+                        <p className={cn("text-2xl font-semibold", isDark ? "text-white" : "text-gray-900")}>
+                          {getLongestStreak} days
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={cn(
+                      "rounded-lg p-4 shadow-sm transform transition-all duration-300 hover:scale-105",
+                      isDark ? "bg-gray-800/70 border border-gray-700/70" : "bg-white border border-gray-200",
+                    )}
+                  >
+                    <div className="flex items-center">
+                      <div
+                        className={cn(
+                          "flex-shrink-0 rounded-md p-3",
+                          isDark ? "bg-emerald-500/20 text-emerald-300" : "bg-emerald-100 text-emerald-600",
+                        )}
+                      >
+                        <BarChart2 size={24} />
+                      </div>
+                      <div className="ml-4">
+                        <p className={cn("text-sm font-medium", isDark ? "text-gray-400" : "text-gray-500")}>
+                          Completion Rate
+                        </p>
+                        <p className={cn("text-2xl font-semibold", isDark ? "text-white" : "text-gray-900")}>
+                          {getOverallCompletionRate}%
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              )}
 
-              {/* Behaviours grid - using windowing for better performance with many behaviors */}
-              {behaviours.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {behaviours.map((behaviour) => (
-                    <BehaviourCard
-                      key={behaviour.id}
-                      behaviour={behaviour}
-                      isDark={isDark}
-                      checkInStatus={checkInStatus}
-                      activeDetailsId={activeDetailsId}
-                      toggleDetails={toggleDetails}
-                      handleCheckIn={handleCheckIn}
-                      getCompletionRate={getCompletionRate}
-                      getNextMilestone={getNextMilestone}
-                      getMotivationalQuote={getMotivationalQuote}
-                    />
-                  ))}
+                {/* Motivational quote */}
+                <div
+                  className={cn(
+                    "mb-6 p-6 rounded-lg shadow-sm text-center transform transition-all duration-500 hover:shadow-lg will-change-transform",
+                    isDark
+                      ? "bg-gradient-to-r from-indigo-900/30 to-purple-900/30 border border-indigo-800/30"
+                      : "bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100",
+                  )}
+                >
+                  <p className={cn("text-lg italic", isDark ? "text-indigo-300" : "text-indigo-800")}>
+                    "{motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)]}"
+                  </p>
                 </div>
-              ) : (
-                <div className={cn("text-center py-8 rounded-lg", isDark ? "bg-gray-800/50" : "bg-gray-50")}>
-                  <p className={isDark ? "text-gray-400" : "text-gray-500"}>You haven't created any behaviours yet.</p>
+
+                {/* Time-based suggestions */}
+                <div className="mb-6">
+                  <Suspense
+                    fallback={
+                      <div className="p-8 border rounded-xl animate-pulse bg-gray-100 dark:bg-gray-800">
+                        <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+                        <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                        <div className="h-4 w-3/4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                      </div>
+                    }
+                  >
+                    <TimeBasedSuggestions isDark={isDark} onAddBehaviour={handleAddSuggestedBehaviour} />
+                  </Suspense>
+                </div>
+
+                {/* Add behaviour button */}
+                <div className="flex justify-between items-center mb-8">
+                  <h2 className={cn("text-xl font-semibold", isDark ? "text-white" : "text-gray-900")}>
+                    Your Behaviours
+                  </h2>
                   <button
                     onClick={() => setIsCreatingBehaviour(true)}
                     className={cn(
-                      "mt-2 transition-colors duration-300",
-                      isDark ? "text-indigo-400 hover:text-indigo-300" : "text-indigo-600 hover:text-indigo-800",
+                      "flex items-center justify-center gap-3 px-5 py-2.5 rounded-lg transition-all duration-300",
+                      "bg-gradient-to-r from-indigo-500 to-rose-500 text-white",
+                      "hover:shadow-lg hover:opacity-90 focus:ring-2 focus:ring-offset-2",
+                      "focus:ring-indigo-500 focus:outline-none mt-2 transform hover:scale-105",
+                      isDark ? "focus:ring-offset-gray-900" : "focus:ring-offset-white",
                     )}
                   >
-                    Create your first behaviour
+                    <PlusCircle size={18} className="flex-shrink-0" />
+                    <span className="font-medium">New Behaviour</span>
                   </button>
                 </div>
-              )}
 
-              {/* Footer */}
-              <div className="mt-12 pt-6 border-t flex justify-between items-center">
-                <div className="w-8"></div>
+                {/* Create behaviour form */}
+                {isCreatingBehaviour && (
+                  <div
+                    className={cn(
+                      "mb-6 p-6 rounded-lg border shadow-sm transition-colors duration-500",
+                      isDark ? "bg-gray-800/50 border-gray-700" : "bg-indigo-50 border-indigo-100",
+                    )}
+                  >
+                    <div className="flex justify-between items-center mb-4">
+                      <h2 className={cn("text-lg font-semibold", isDark ? "text-white" : "text-indigo-900")}>
+                        Create New Behaviour
+                      </h2>
+                      <button
+                        onClick={() => setIsCreatingBehaviour(false)}
+                        className={cn(
+                          "transition-colors duration-300 rounded-full p-1",
+                          isDark
+                            ? "text-gray-400 hover:text-gray-200 hover:bg-gray-700"
+                            : "text-gray-500 hover:text-gray-700 hover:bg-gray-100",
+                        )}
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
+                    <form onSubmit={handleCreateBehaviour}>
+                      <div className="grid gap-4 mb-4 md:grid-cols-2">
+                        <div>
+                          <label
+                            htmlFor="behaviourName"
+                            className={cn("block text-sm font-medium mb-1", isDark ? "text-gray-300" : "text-gray-700")}
+                          >
+                            Behaviour Name
+                          </label>
+                          <input
+                            type="text"
+                            id="behaviourName"
+                            value={newBehaviourName}
+                            onChange={(e) => setNewBehaviourName(e.target.value)}
+                            className={cn(
+                              "w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 transition-colors duration-300",
+                              isDark
+                                ? "bg-gray-800 border-gray-700 text-white border focus:ring-indigo-500/50"
+                                : "bg-white border border-gray-300 text-gray-900 focus:ring-indigo-500/30",
+                            )}
+                            placeholder="e.g., Daily Reading"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="behaviourDescription"
+                            className={cn("block text-sm font-medium mb-1", isDark ? "text-gray-300" : "text-gray-700")}
+                          >
+                            Description (Optional)
+                          </label>
+                          <input
+                            type="text"
+                            id="behaviourDescription"
+                            value={newBehaviourDescription}
+                            onChange={(e) => setNewBehaviourDescription(e.target.value)}
+                            className={cn(
+                              "w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 transition-colors duration-300",
+                              isDark
+                                ? "bg-gray-800 border-gray-700 text-white border focus:ring-indigo-500/50"
+                                : "bg-white border border-gray-300 text-gray-900 focus:ring-indigo-500/30",
+                            )}
+                            placeholder="e.g., Read for 20 minutes each day"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => setIsCreatingBehaviour(false)}
+                          className={cn(
+                            "px-4 py-2 rounded-md mr-2 transition-colors duration-300",
+                            isDark
+                              ? "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                              : "border border-gray-300 text-gray-700 hover:bg-gray-50",
+                          )}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-rose-500 text-white rounded-md hover:opacity-90 transition-opacity duration-300"
+                        >
+                          Create Behaviour
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+
+                {/* Behaviours grid - using windowing for better performance with many behaviors */}
+                {behaviours.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {behaviours.map((behaviour) => (
+                      <BehaviourCard
+                        key={behaviour.id}
+                        behaviour={behaviour}
+                        isDark={isDark}
+                        checkInStatus={checkInStatus}
+                        activeDetailsId={activeDetailsId}
+                        toggleDetails={toggleDetails}
+                        handleCheckIn={handleCheckIn}
+                        getCompletionRate={getCompletionRate}
+                        getNextMilestone={getNextMilestone}
+                        getMotivationalQuote={getMotivationalQuote}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className={cn("text-center py-8 rounded-lg", isDark ? "bg-gray-800/50" : "bg-gray-50")}>
+                    <p className={isDark ? "text-gray-400" : "text-gray-500"}>
+                      You haven't created any behaviours yet.
+                    </p>
+                    <button
+                      onClick={() => setIsCreatingBehaviour(true)}
+                      className={cn(
+                        "mt-2 transition-colors duration-300",
+                        isDark ? "text-indigo-400 hover:text-indigo-300" : "text-indigo-600 hover:text-indigo-800",
+                      )}
+                    >
+                      Create your first behaviour
+                    </button>
+                  </div>
+                )}
+
+                {/* Footer */}
+                <div className="mt-12 pt-6 border-t flex justify-center items-center">
+                  <div className="w-8"></div>
+                </div>
               </div>
-            </div>
+            </PageTransition>
           </main>
         </div>
       </div>

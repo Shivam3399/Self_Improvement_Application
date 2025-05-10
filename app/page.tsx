@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
 import HeroGeometric from "@/components/kokonutui/hero-geometric"
+import { PageTransition } from "@/components/page-transition"
 
 export default function Home() {
   const { isAuthenticated, isLoading } = useAuth()
@@ -27,8 +28,10 @@ export default function Home() {
   }
 
   return (
-    <main>
-      <HeroGeometric title1="Self Improvement" title2="Application" />
-    </main>
+    <PageTransition>
+      <main>
+        <HeroGeometric title1="Self Improvement" title2="Application" />
+      </main>
+    </PageTransition>
   )
 }

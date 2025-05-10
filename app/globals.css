@@ -1,16 +1,85 @@
+/* Flash prevention styles */
+.no-flash {
+  transition: none !important;
+}
+
+/* Make sure backgrounds remain consistent during any transition */
+html,
+body,
+#__next,
+main,
+[data-nextjs-scroll-focus-boundary],
+div {
+  background-color: inherit;
+}
+
+/* Prevent content shifting during transitions */
+html.dark body,
+html.dark #__next,
+html.dark main,
+html.dark [data-nextjs-scroll-focus-boundary] {
+  background-color: #030303;
+  color: #fafafa;
+}
+
+html:not(.dark) body,
+html:not(.dark) #__next,
+html:not(.dark) main,
+html:not(.dark) [data-nextjs-scroll-focus-boundary] {
+  background-color: #ffffff;
+  color: #0a0a0a;
+}
+
+/* Ensure next.js overlay follows theme */
+#__next-build-watcher {
+  background-color: inherit !important;
+}
+
+/* Critical rendering styles */
+html {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Override any transitions during page load */
+* {
+  transition: none !important;
+}
+
+/* Add back transitions after the page loads */
+html.transitions-enabled * {
+  transition: all 0.2s ease-in-out;
+}
+
+html.transitions-enabled *[class*="-colors"],
+html.transitions-enabled *[class*="-transform"],
+html.transitions-enabled *[class*="-opacity"],
+html.transitions-enabled *[class*="-all"] {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, fill 0.3s ease, stroke 0.3s ease,
+    opacity 0.3s ease, transform 0.3s ease !important;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Prevent flash of unstyled content */
-html {
+/* html {
   visibility: visible;
   opacity: 1;
   color-scheme: light;
-}
+   Prevent any background flash during transitions 
+  transition: background-color 0ms, color 0ms;
+} */
 
 html.dark {
   color-scheme: dark;
+}
+
+/* Ensure body background matches the html background */
+body {
+  background-color: inherit;
+  color: inherit;
 }
 
 /* Performance optimization for frequently animated elements */
@@ -33,6 +102,15 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Add a persistent background to the app container to prevent flashes */
+#__next,
+main,
+.app-container {
+  background-color: inherit;
+  color: inherit;
+  min-height: 100vh;
 }
 
 @layer utilities {
